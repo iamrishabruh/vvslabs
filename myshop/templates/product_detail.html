@@ -13,7 +13,7 @@
 
     .pagination_button:hover{
     padding: 5px 10px;
-    background: #ef3f49;
+    background: #A1C6EA;
     color: white;
 }
 </style>
@@ -170,7 +170,7 @@
                                                             {% for num in comments.paginator.page_range %}
                                                             {% if comments.number == num %}
                                                             <a class="pagination_button" href="?page={{ num }}"
-                                                                style="color: white; background: #ef3f49;">{{ num }}</a>
+                                                                style="color: white; background: #A1C6EA;">{{ num }}</a>
                                          {% elif num > comments.number|add:'-3' and num < comments.number|add:'3' %} <a
                                                                 class="pagination_button" href="?page={{ num }}"
                                                                 style="color: white; background: #262F75;">{{ num }}</a>

@@ -8,7 +8,8 @@ urlpatterns = [
     path("addtowishlist/<int:id>", views.addtowishlist, name="addtowishlist"),
     path('deletefromwishlist/<int:id>', views.deletefromwishlist, name='deletefromwishlist'),
     path('checkout/', views.checkout, name='checkout'),
-    
+    path('process_payment/', views.process_payment, name='process_payment'),
+    path('webhook/', views.stripe_webhook, name='stripe_webhook'),
 
 ]
 

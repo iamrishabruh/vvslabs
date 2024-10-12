@@ -3,8 +3,8 @@ from django.forms import ModelForm
 from product.models import *
 # Create your models here.
 class ShopCart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
 
     def __str__(self):
@@ -27,8 +27,8 @@ class ShopCartForm(ModelForm):
 
 
 class WishList(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField()
 
     def __str__(self):
@@ -55,7 +55,7 @@ class Order(models.Model):
         ('Completed', 'Completed'),
         ('Canceled', 'Canceled'),
     )
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     code = models.CharField(max_length=10, editable=False )
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
@@ -64,9 +64,8 @@ class Order(models.Model):
     country = models.CharField(blank=True, max_length=30)
     city = models.CharField(blank=True, max_length=30)
     address_one = models.CharField(blank=True, max_length=250)
-    address_two = models.CharField(blank=True, max_length=250)
+    address_two = models.CharField(blank=True, null=True, max_length=250)
     postal_code = models.CharField(blank=True, max_length=250)
-    company = models.CharField(blank=True, max_length=250)
     total = models.FloatField()
     status=models.CharField(max_length=10,choices=STATUS,default='New')
     ip = models.CharField(blank=True, max_length=20)
@@ -74,13 +73,21 @@ class Order(models.Model):
     create_at=models.DateTimeField(auto_now_add=True)
     update_at=models.DateTimeField(auto_now=True)
 
+     # Payment Fields
+    stripe_payment_intent = models.CharField(max_length=255, blank=True, null=True)
+    stripe_payment_status = models.CharField(max_length=50, blank=True, null=True)
+    
+    paid = models.BooleanField(default=False)
+    payment_intent = models.CharField(max_length=255, blank=True, null=True)
+    
+
     def __str__(self):
         return self.user.first_name
 
 class OrderForm(ModelForm):
     class Meta:
         model = Order
-        fields = ['first_name','last_name','email','phone','city','country','address_one','address_two','postal_code','company',]
+        fields = ['first_name','last_name','email','phone','city','country','address_one','address_two','postal_code']
 
 class OrderProduct(models.Model):
     STATUS = (

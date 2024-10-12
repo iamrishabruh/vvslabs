@@ -13,10 +13,17 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 from django.contrib.messages import constants as messages
+import environ
 
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -24,11 +31,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '7ux5!wn7#jh9a7%j0a_e##7y+m%8z@tnhv!e0+u26q61hb!kos'
+STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ['127.0.0.1','shopcorner.herokuapp.com']
+# ALLOWED_HOSTS = ['127.0.0.1','https://vvslabs.netlify.app']
 ALLOWED_HOSTS = ['*']
 
 
@@ -89,7 +98,7 @@ WSGI_APPLICATION = 'shopping.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': str(BASE_DIR / 'db.sqlite3'),
     }
 }
 
@@ -132,10 +141,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,'/static/')
+    os.path.join(BASE_DIR,'staticfiles')
 ]
+STATIC_ROOT = BASE_DIR / 'staticfiles' 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/media/'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MESSAGE_TAGS = {
     messages.ERROR:'danger'

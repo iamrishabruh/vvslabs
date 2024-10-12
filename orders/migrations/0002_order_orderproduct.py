@@ -28,7 +28,6 @@ class Migration(migrations.Migration):
                 ('address_one', models.CharField(blank=True, max_length=150)),
                 ('address_two', models.CharField(blank=True, max_length=150)),
                 ('postal_code', models.CharField(blank=True, max_length=150)),
-                ('company', models.CharField(blank=True, max_length=150)),
                 ('total', models.FloatField()),
                 ('status', models.CharField(choices=[('New', 'New'), ('Accepted', 'Accepted'), ('Preaparing', 'Preaparing'), ('OnShipping', 'OnShipping'), ('Completed', 'Completed'), ('Canceled', 'Canceled')], default='New', max_length=10)),
                 ('ip', models.CharField(blank=True, max_length=20)),

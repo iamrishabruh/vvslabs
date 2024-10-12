@@ -32,11 +32,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='order',
-            name='company',
-            field=models.CharField(blank=True, max_length=250),
-        ),
-        migrations.AlterField(
-            model_name='order',
             name='country',
             field=models.CharField(blank=True, max_length=30),
         ),

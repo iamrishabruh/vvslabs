@@ -52,11 +52,11 @@ def index(request):
         '-id')[:4]  # Product Slider
     lastest_product = Product.objects.all().order_by(
         '-id')[:3]  # Lastest Prodcut
-    recommanded_product = Product.objects.all().order_by('?')[
+    recommended_product = Product.objects.all().order_by('?')[
         :3]  # Random Product
     viewed_product = Product.objects.all().order_by('id')[:3]
     hometab_lastest_product = Product.objects.all().order_by('-id')[:8]
-    hometab_recommanded_product = Product.objects.all().order_by('?')[:8]
+    hometab_recommended_product = Product.objects.all().order_by('?')[:8]
     hometab_men_product = Product.objects.filter(category=5)  # Men Category
     hometab_women_product = Product.objects.filter(category=8)  # Women Category
     top_view_product = Product.objects.all().order_by('-num_of_visits')[:8]
@@ -73,10 +73,10 @@ def index(request):
         'category': category,
         'products_slider': product_sliders,
         'lastest_product': lastest_product,
-        'recommanded_product': recommanded_product,
+        'recommended_product': recommended_product,
         'viewed_product': viewed_product,
         'hometab_lastest_product': hometab_lastest_product,
-        'hometab_recommanded_product':   hometab_recommanded_product,
+        'hometab_recommended_product':   hometab_recommended_product,
         'shopcart': shopcart,
         'total': total,
         'total_product': total_product,
@@ -210,19 +210,19 @@ def demo(request):
     category = Category.objects.all()
     product_sliders = Product.objects.all().order_by('-id')[:4]
     lastest_product = Product.objects.all().order_by('-id')[:3]
-    recommanded_product = Product.objects.all().order_by('?')[:3]
+    recommended_product = Product.objects.all().order_by('?')[:3]
     viewed_product = Product.objects.all().order_by('id')[:3]
     hometab_lastest_product = Product.objects.all().order_by('-id')[:8]
-    hometab_recommanded_product = Product.objects.all().order_by('?')[:8]
+    hometab_recommended_product = Product.objects.all().order_by('?')[:8]
     deletecard = shopcart(request)
     context = {
         'category': category,
         'products_slider': product_sliders,
         'lastest_product': lastest_product,
-        'recommanded_product': recommanded_product,
+        'recommended_product': recommended_product,
         'viewed_product': viewed_product,
         'hometab_lastest_product': hometab_lastest_product,
-        'hometab_recommanded_product': hometab_recommanded_product,
+        'hometab_recommended_product': hometab_recommended_product,
         'deletecard': deletecard,
     }
     return render(request, 'demo.html', context)

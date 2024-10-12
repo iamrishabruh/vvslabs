@@ -48,68 +48,159 @@ class Category(MPTTModel):
         else:
             return ""    
 
+from django.db import models
+from ckeditor_uploader.fields import RichTextUploadingField  # Ensure django-ckeditor is installed and configured
+
 class Product(models.Model):
+    # Status Choices
     STATUS = (
         ('True', 'True'),
         ('False', 'False'),
     )
 
-    SIZE = (
+    # Gender Choices (if still applicable)
+    GENDER = (
         ('None', 'None'),
-        ('Size', 'Small'),
-        ('Medium','Medium'),
-        ('Large','Large'),
+        ('Men', 'Men'),
+        ('Women', 'Women'),
     )
-    GENDER=(
-        ('Men','Men'),
-        ('Women','Women'),
-    )
-    WOMEN_BRAND=(
-        ('None','None'),
-        ('Nishat','Nishat'),
-        ('Bareeze','Bareeze'),
-        ('Khaadi','Khaadi'),
-        ('Limelight','Limelight'),
-        ('Maria B','Maria B'),
-        ('Gul Ahmed','Gul Ahmed'),
-        ('Junaid Jamshed','Junaid Jamshed'),
-    )
-    MEN_BRAND=(
-        ('None','None'),
-        ('Levi','Levi'),
-        ('People Jeans','People Jeans'),
-        ('Lee','Lee'),
-        ('Adidas','Adidas'),
-        ('Flying Machine','Flying Machine'),
-    )
+
+    # Variant Choices
     VARIANTS = (
         ('None', 'None'),
-        ('Size', 'Size'),
         ('Color', 'Color'),
-        ('Size-Color', 'Size-Color'), 
+        ('Color-Size', 'Color-Size'), 
     )
-    category = models.ForeignKey(Category, on_delete=models.CASCADE) 
+
+    # Category Relationship
+    category = models.ForeignKey('Category', on_delete=models.CASCADE)
+
+    # Basic Product Information
     title = models.CharField(max_length=150)
     keywords = models.CharField(max_length=255)
     description = models.TextField(max_length=255)
-    long_description=RichTextUploadingField(default='Write Your long Description here')
-    image=models.ImageField(upload_to='images/',null=False)
-    price = models.DecimalField(max_digits=12, decimal_places=2,default=0)
-    quantity=models.IntegerField(default=0)
-    women_brand=models.CharField(max_length=100,choices=WOMEN_BRAND,default='None')
-    men_brand=models.CharField(max_length=100,choices=MEN_BRAND,default='None')
-    gender=models.CharField(max_length=100, choices=GENDER,default='None')
-    size=models.CharField(max_length=100,choices=SIZE, default='None')
+    long_description = RichTextUploadingField(default='Write Your long Description here')
+
+    # Image and Media
+    image = models.ImageField(upload_to='images/', null=False)
+    additional_images = models.ImageField(upload_to='images/additional/', blank=True, null=True)  # Optional: For multiple images
+
+    # Pricing and Inventory
+    price = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    quantity = models.IntegerField(default=0)
+
+    # Gender (if still applicable)
+    gender = models.CharField(max_length=100, choices=GENDER, default='None')
+
+    # Slug for SEO-friendly URLs
     slug = models.SlugField(null=False, unique=True)
-    status=models.CharField(max_length=10,choices=STATUS)
-    create_at=models.DateTimeField(auto_now_add=True)
-    update_at=models.DateTimeField(auto_now=True)
-    variant=models.CharField(max_length=10,choices=VARIANTS, default='None')
-    num_of_visits=models.IntegerField(default=0)
-    last_visit=models.DateTimeField(blank=True,null=True)
+
+    # Status and Variants
+    status = models.CharField(max_length=10, choices=STATUS)
+    variant = models.CharField(max_length=20, choices=VARIANTS, default='None')
+
+    # Visit Tracking
+    num_of_visits = models.IntegerField(default=0)
+    last_visit = models.DateTimeField(blank=True, null=True)
+
+    # Diamond Specific Fields
+
+    METAL_TYPE_CHOICES = (
+        ('10kt White Gold', '10kt White Gold'),
+        ('14kt Yellow Gold', '14kt Yellow Gold'),
+        ('18kt Rose Gold', '18kt Rose Gold'),
+        ('Platinum', 'Platinum'),
+        # Add more as needed
+    )
+    metal_type = models.CharField(max_length=50, choices=METAL_TYPE_CHOICES, default='10kt White Gold')
+
+    STYLE_CHOICES = (
+        ('Crosses', 'Crosses'),
+        ('Rings', 'Rings'),
+        ('Earrings', 'Earrings'),
+        ('Bracelets', 'Bracelets'),
+        ('Necklaces', 'Necklaces'),
+        ('Pendants', 'Pendants'),
+        # Add more as needed
+    )
+    style = models.CharField(max_length=50, choices=STYLE_CHOICES, default='Crosses')
+
+    CARATS_TOTAL_WEIGHT_CHOICES = (
+        ('1/2 Ct.t.w.', '1/2 Ct.t.w.'),
+        ('1 Ct.t.w.', '1 Ct.t.w.'),
+        ('1.25 Ct.t.w.', '1.25 Ct.t.w.'),
+        ('1.5 Ct.t.w.', '1.5 Ct.t.w.'),
+        ('1.75 Ct.t.w.', '1.75 Ct.t.w.'),
+        ('2 Ct.t.w.', '2 Ct.t.w.'),
+        ('2.25 Ct.t.w.', '2.25 Ct.t.w.'),
+        ('2.5 Ct.t.w.', '2.5 Ct.t.w.'),
+        ('2.75 Ct.t.w.', '2.75 Ct.t.w.'),
+        ('3 Ct.t.w.', '3 Ct.t.w.'),
+        ('3.25 Ct.t.w.', '3.25 Ct.t.w.'),
+        ('3.5 Ct.t.w.', '3.5 Ct.t.w.'),
+        ('3.75 Ct.t.w.', '3.75 Ct.t.w.'),
+        ('4 Ct.t.w.', '4 Ct.t.w.'),
+        ('4.25 Ct.t.w.', '4.25 Ct.t.w.'),
+        ('4.5 Ct.t.w.', '4.5 Ct.t.w')
+        # Add more as needed
+    )
+    carats_total_weight = models.CharField(max_length=20, choices=CARATS_TOTAL_WEIGHT_CHOICES, default='1/2 Ct.t.w.')
+
+    PRIMARY_GEM_TYPE_CHOICES = (
+        ('Diamond', 'Diamond'),
+        ('Sapphire', 'Sapphire'),
+        ('Ruby', 'Ruby'),
+        ('Emerald', 'Emerald'),
+        # Add more as needed
+    )
+    primary_gem_type = models.CharField(max_length=50, choices=PRIMARY_GEM_TYPE_CHOICES, default='Diamond')
+
+    PRIMARY_GEM_SHAPE_CHOICES = (
+        ('Round', 'Round'),
+        ('Princess', 'Princess'),
+        ('Emerald', 'Emerald'),
+        ('Oval', 'Oval'),
+        ('Marquise', 'Marquise'),
+        ('Cushion', 'Cushion'),
+        ('Pear', 'Pear'),
+        ('Heart', 'Heart'),
+        # Add more as needed
+    )
+    primary_gem_shape = models.CharField(max_length=50, choices=PRIMARY_GEM_SHAPE_CHOICES, default='Round')
+
+    primary_gem_color_clarity = models.CharField(
+        max_length=50,
+        default='G-H / I3',
+        verbose_name="Primary Gem Color / Clarity",
+        help_text="Format: Color/Clarity (e.g., G-H / I3)"
+    )
+
+    length_mm = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0,
+        verbose_name="Length (mm)",
+        help_text="Length of the jewelry piece in millimeters"
+    )
+    width_mm = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0,
+        verbose_name="Width (mm)",
+        help_text="Width of the jewelry piece in millimeters"
+    )
+
+    gram_weight = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        default=0,
+        verbose_name="Gram Weight",
+        help_text="Weight of the jewelry piece in grams (approximately)"
+    )
 
     def __str__(self):
         return self.title
+
     def get_absolute_url(self):
         return reverse('category_detail', kwargs={'slug': self.slug})
 ## method to create a fake table field in read only mode
