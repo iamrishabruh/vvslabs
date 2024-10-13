@@ -14,34 +14,35 @@ from pathlib import Path
 import os
 from django.contrib.messages import constants as messages
 import environ
+import dj_database_url  # Ensure dj_database_url is installed
+# import django_heroku  # Uncomment if you plan to use django-heroku
 
+# Initialize environment variables
+env = environ.Env(
+    DEBUG=(bool, False)  # Set default DEBUG to False
+)
+
+# Define BASE_DIR
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-
-env = environ.Env(
-    DEBUG=(bool, False)
-)
+# Read the .env file
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-
-
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = env('SECRET_KEY')  # Ensure SECRET_KEY is set in .env
 
-SECRET_KEY = os.getenv('SECRET_KEY') # = '7ux5!wn7jh9a7%j0a_e7y+m%8z@tnhv!e0+u26q61hb!kos'
-STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
-STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+# Stripe Configuration
+STRIPE_PUBLISHABLE_KEY = env('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')  # Set DEBUG via environment variable
 
-# ALLOWED_HOSTS = ['127.0.0.1','https://vvslabs.netlify.app']
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS')
-
+# ALLOWED_HOSTS
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')  # Expecting a comma-separated list in .env
 
 # Application definition
 
@@ -58,13 +59,13 @@ INSTALLED_APPS = [
     'myshop',
     'product',
     'orders',
-    'user'
-    
+    'user',
+    # Add any other third-party or custom apps here
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # WhiteNoise Middleware for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -78,12 +79,12 @@ ROOT_URLCONF = 'shopping.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [BASE_DIR / 'templates'],  # Use pathlib.Path for consistency
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
+                'django.template.context_processors.request',  # Required by admin
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -93,17 +94,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'shopping.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# Configure database with dj_database_url
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': str(BASE_DIR / 'db.sqlite3'),
-    }
+    'default': dj_database_url.config(
+        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3')  # Fallback to SQLite for local development
+    )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -123,7 +122,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -137,41 +135,33 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-
-# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
+
+# Directory where Django will collect static files for production
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Use pathlib.Path
 
 # Directories where Django will search for additional static files
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'staticfiles'),  # Project-level static files
-    # Add other static directories if needed
+    BASE_DIR / 'static',  # Project-level static files
+    # Add other static directories if needed, e.g., BASE_DIR / 'myshop' / 'static'
 ]
-
-# Directory where collectstatic will collect all static files for production
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Media files (User-uploaded content)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media', 'uploads')
+MEDIA_ROOT = BASE_DIR / 'media' / 'uploads'  # Consolidated path
 
 # Whitenoise configuration for serving static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-
+# Messages Framework Configuration
 MESSAGE_TAGS = {
-    messages.ERROR:'danger'
+    messages.ERROR: 'danger',  # Bootstrap compatible
 }
-#...
-SITE_ID = 1
 
-####################################
-    ##  CKEDITOR CONFIGURATION ##
-####################################
-
+# CKEditor Configuration
 CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
 
 CKEDITOR_UPLOAD_PATH = 'images/'
@@ -183,3 +173,21 @@ CKEDITOR_CONFIGS = {
     },
 }
 
+# Additional Security Settings for Production
+if not DEBUG:
+    # Security Middleware Settings
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    # HSTS settings
+    SECURE_HSTS_SECONDS = 3600
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    # Content Security Policy (Optional)
+    # SECURE_CONTENT_TYPE_NOSNIFF = True
+    # SECURE_BROWSER_XSS_FILTER = True
+    # X_FRAME_OPTIONS = 'DENY'
+
+# Activate Django-Heroku (Optional)
+# django_heroku.settings(locals())
