@@ -15,6 +15,7 @@ import os
 from django.contrib.messages import constants as messages
 import environ
 
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 
@@ -139,7 +140,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
