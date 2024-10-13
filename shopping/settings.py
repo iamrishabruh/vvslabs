@@ -31,7 +31,8 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '7ux5!wn7#jh9a7%j0a_e##7y+m%8z@tnhv!e0+u26q61hb!kos'
+
+SECRET_KEY = os.getenv('SECRET_KEY') # = '7ux5!wn7jh9a7%j0a_e7y+m%8z@tnhv!e0+u26q61hb!kos'
 STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 
@@ -39,7 +40,7 @@ STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 DEBUG = True
 
 # ALLOWED_HOSTS = ['127.0.0.1','https://vvslabs.netlify.app']
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS')
 
 
 # Application definition
