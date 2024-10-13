@@ -16,7 +16,7 @@ from django.contrib.messages import constants as messages
 import environ
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 env = environ.Env(
     DEBUG=(bool, False)
@@ -139,15 +139,27 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,'staticfiles')
-]
-STATIC_ROOT = BASE_DIR / 'staticfiles' 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
-MEDIA_URL = '/media/'
+BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+
+# Directories where Django will search for additional static files
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # Project-level static files
+    # Add other static directories if needed
+]
+
+# Directory where collectstatic will collect all static files for production
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Media files (User-uploaded content)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media', 'uploads')
+
+# Whitenoise configuration for serving static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 MESSAGE_TAGS = {
     messages.ERROR:'danger'
