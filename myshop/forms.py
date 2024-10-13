@@ -2,6 +2,7 @@
 
 from orders.models import ShopCart, WishList, Order
 from django import forms
+import csv
 
 
 class SearchForm(forms.Form):
@@ -26,3 +27,18 @@ class OrderForm(forms.ModelForm):
             'country', 'city', 'address_one', 'address_two',
             'postal_code'
         ]
+
+class CSVUploadForm(forms.Form):
+    csv_file = forms.FileField(
+        label='Select a CSV file',
+        help_text='Maximum file size: 10MB',
+        widget=forms.ClearableFileInput(attrs={'accept': '.csv'})
+    )
+
+    def clean_csv_file(self):
+        csv_file = self.cleaned_data['csv_file']
+        if not csv_file.name.endswith('.csv'):
+            raise forms.ValidationError('File is not CSV type')
+        if csv_file.size > 10 * 1024 * 1024:
+            raise forms.ValidationError('File size exceeds 10MB')
+        return csv_file

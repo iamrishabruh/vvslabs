@@ -21,14 +21,17 @@
                         <ul class="categor-list">
                             {% recursetree category %}
                             
-                            <li><a href="/category/{{node.id}}/{{node.slug}}" style="color: black;">
+                            <li style="margin-bottom: 15px"><a href="/category/{{node.id}}/{{node.slug}}" style="color: black;">
                                     {{node.title}}</a>
                                 {% if not node.is_leaf_node %}
+                                <br>
                             </li>
+                            
                             <ul class="children">
                                 <a href="/category/{{node.id}}/{{node.slug}}" style="color: black;">
                                     {{children }}</a>
                             </ul> {%endif%} {% endrecursetree%}
+                            <br>
                         </ul>
                     </div>
                     <!--/ End Single Widget -->

@@ -1,0 +1,21 @@
+<!-- templates/admin/upload_csv_form.html -->
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+  <h1>{{ title }}</h1>
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <div class="form-row">
+      {{ form.csv_file.label_tag }}
+      {{ form.csv_file }}
+      {% if form.csv_file.help_text %}
+        <p class="help">{{ form.csv_file.help_text }}</p>
+      {% endif %}
+      {% for error in form.csv_file.errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+    </div>
+    <button type="submit" class="default">Upload</button>
+    <a href="{% url 'admin:product_product_changelist' %}" class="button">Cancel</a>
+  </form>
+{% endblock %}

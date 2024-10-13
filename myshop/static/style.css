@@ -1280,7 +1280,7 @@ Version:1.0
 	transform:scale(1);
 }
 .hero-area2 .single-slider{
-	height:500px;
+	height:100px;
 	position:relative;
 	background-size:cover;
 	background-position:center;
@@ -2766,7 +2766,7 @@ Version:1.0
 }
 .shop.single .form .form-group textarea {
 	width: 100%;
-	height:200px;
+	height:300px;
 	padding: 20px;
 	background:#fff;
 	border:1px solid #ddd;
@@ -4602,7 +4602,7 @@ Version:1.0
 }
 .blog-single .reply .form-group textarea {
 	width: 100%;
-	height: 200px;
+	height: 300px;
 	line-height: 50px;
 	padding: 0 20px;
 	border-radius: 0px;
