@@ -15,13 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.urls import static
 from django.conf import settings
-from django.conf.urls.static import static
 from myshop import views
 from orders import views as OrderViews
 from user import views as UserViews
-from django.views.static import serve
-from django.conf.urls import url
 
 
 urlpatterns = [
