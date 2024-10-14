@@ -108,7 +108,7 @@
                 <div class="col-lg-8 col-md-7 col-12" style="margin-top: 20px;">
                     <div class="container">
                         <form class="d-flex" action="/search" method="GET" value="{{request.GET.q}}">
-                            <input class="form-control me-2" type="text" name="q" value="{{request.GET.q}}" placeholder="Search posts"/>
+                            <input class="form-control me-2" type="text" name="q" value="{{request.GET.q}}" placeholder="Search inventory"/>
                            <input id="new-arrival-btn" type="submit" name="submit" value="Search"/>
                            </form>
 
@@ -119,15 +119,11 @@
                 <div class="col-lg-2 col-md-3 col-12">
                     <div class="right-bar">
                         <!-- Search Form -->
-                        <div class="sinlge-bar">
-                            <a href="#" class="single-icon"><i class="fa fa-heart-o" aria-hidden="true">
-                                ::before
-                            </i>
-                        </a>
-                        </div>
+                        
                         <div class="sinlge-bar shopping">
                             {%if user.id is not None%}
-                            <a href="#" class="single-icon"><img src="{{ request.session.userimage }}" alt="" }} style="height: 50px;width: 40px;border-radius: 100%;"></a>
+                            
+                            <a href="/account" class="single-icon"><img src="{{ request.session.userimage }}" alt=""style="height: 30px;width: 30px;border-radius: 100%;"></a>
                             {%else%}
                             <a href="/account"  title="Account"><i class="fa fa-user-circle-o"></i></a>
                             {%endif%}
@@ -144,7 +140,7 @@
                                     &nbsp;&nbsp; My Account </a>
                                     </li>
                                     <li>
-                                        <a href="/wishlist"  title="Account"><i class="fa fa-heart-o"></i>
+                                        <a href="/wishlist"  title="Wishlist"><i class="fa fa-heart-o"></i>
                                     &nbsp;&nbsp; My Wishlist </a>
                                     </li>
                                     <li>
@@ -198,9 +194,8 @@
                                     {%if user.id is not None%}
                                     <a href="/checkout" class="btn animate">Checkout</a>
                                     {%else%}
-                           
-                                <a href="/login">Login</a> or <a href="/signup">Sign Up</a>
-                                {%endif%}
+                                    <a href="/login">Login</a> or <a href="/signup">Sign Up</a>
+                                    {%endif%}
                                 </div>
                             </div>
                             <!--/ End Shopping Item -->

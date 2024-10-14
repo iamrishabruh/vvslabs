@@ -116,7 +116,7 @@
 					<div class="col-lg-8 col-md-7 col-12" style="margin-top: 20px;">
 						<div class="container">
 							<form class="d-flex" action="/search" method="GET" value="{{request.GET.q}}">
-								<input class="form-control me-2" type="text" name="q" value="{{request.GET.q}}" placeholder="Search posts"/>
+								<input class="form-control me-2" type="text" name="q" value="{{request.GET.q}}" placeholder="Search inventory"/>
 							   <input id="new-arrival-btn" type="submit" name="submit" value="Search"/>
 							   </form>
 
@@ -398,10 +398,14 @@
 											<div class="single-product">
 												<div class="product-img">
 													<a href="/product/{{ rs.id }}/{{ rs.slug }}">
+														{% if rs.image %}
 														<img class="default-img tab-image"
 															src="{{rs.image.url}}" alt="#" style="width: 400px ;
 															height: 355px ;" >
-														
+														{% else %}
+														<!-- Display a default placeholder image -->
+														<img class="default-img tab-image" src="{% static 'images/placeholder.png' %}" alt="No Image Available" style="width: 400px; height: 355px;">
+													{% endif %}
 													</a>
 													<div class="button-head">
 														<div class="product-action">
@@ -439,10 +443,14 @@
 											<div class="single-product">
 												<div class="product-img">
 													<a href="/product/{{ rs.id }}/{{ rs.slug }}">
+														{% if rs.image %}
 														<img class="default-img tab-image"
 															src="{{rs.image.url}}" alt="#" style="width: 400px ;
 															height: 355px ;" >
-														
+														{% else %}
+														<!-- Display a default placeholder image -->
+														<img class="default-img tab-image" src="{% static 'images/placeholder.png' %}" alt="No Image Available" style="width: 400px; height: 355px;">
+													{% endif %}
 													</a>
 													<div class="button-head">
 														<div class="product-action">
@@ -480,10 +488,14 @@
 											<div class="single-product">
 												<div class="product-img">
 													<a href="/product/{{ rs.id }}/{{ rs.slug }}">
+														{% if rs.image %}
 														<img class="default-img tab-image"
 															src="{{rs.image.url}}" alt="#" style="width: 400px ;
 															height: 355px ;" >
-														
+														{% else %}
+														<!-- Display a default placeholder image -->
+														<img class="default-img tab-image" src="{% static 'images/placeholder.png' %}" alt="No Image Available" style="width: 400px; height: 355px;">
+													{% endif %}
 													</a>
 													<div class="button-head">
 														<div class="product-action">
@@ -520,10 +532,14 @@
 										<div class="single-product">
 											<div class="product-img">
 												<a href="/product/{{ rs.id }}/{{ rs.slug }}">
-													<img class="default-img tab-image"
+													{% if rs.image %}
+														<img class="default-img tab-image"
 															src="{{rs.image.url}}" alt="#" style="width: 400px ;
 															height: 355px ;" >
-												
+														{% else %}
+														<!-- Display a default placeholder image -->
+														<img class="default-img tab-image" src="{% static 'images/placeholder.png' %}" alt="No Image Available" style="width: 400px; height: 355px;">
+													{% endif %}
 												</a>
 												<div class="button-head">
 													<div class="product-action">
@@ -579,8 +595,13 @@
 						<div class="single-product">
 							<div class="product-img">
 								<a href="/product/{{ rs.id }}/{{ rs.slug }}">
+									{% if rs.image %}
 									<img class="default-img slider_images" src="{{rs.image.url}}" alt="#">
 									<img class="hover-img slider_images" src="{{rs.image.url}}" alt="#">
+									{% else %}
+									<!-- Display a default placeholder image -->
+									<img class="default-img tab-image" src="{% static 'images/placeholder.png' %}" alt="No Image Available" style="width: 400px; height: 355px;">
+									{% endif %}
 									<span class="out-of-stock">Hot</span>
 								</a>
 								<div class="button-head">
@@ -633,7 +654,12 @@
 						<div class="row">
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="list-image overlay">
+									{% if rs.image %}
+													
 									<img src="{{rs.image.url}}" alt="#" class="three_col_product"">
+									{% else %}
+									<img class="default-img tab-image" src="{% static 'images/placeholder.png' %}" alt="No Image Available" style="width: 400px; height: 355px;">
+									{% endif %}
 									<a href="/orders/addtoshopcart/{{ rs.id }}" class="buy"><i class="fa fa-shopping-bag"></i></a>
 								</div>
 							</div>
@@ -664,7 +690,12 @@
 						<div class="row">
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="list-image overlay">
-									<img src="{{rs.image.url}}" alt="#" class="three_col_product">
+									{% if rs.image %}
+													
+									<img src="{{rs.image.url}}" alt="#" class="three_col_product"">
+									{% else %}
+									<img class="default-img tab-image" src="{% static 'images/placeholder.png' %}" alt="No Image Available" style="width: 400px; height: 355px;">
+									{% endif %}
 									<a href="/orders/addtoshopcart/{{ rs.id }}" class="buy"><i class="fa fa-shopping-bag"></i></a>
 								</div>
 							</div>
@@ -694,7 +725,12 @@
 						<div class="row">
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="list-image overlay">
-									<img src="{{rs.image.url}}" alt="#" class="three_col_product">
+									{% if rs.image %}
+													
+									<img src="{{rs.image.url}}" alt="#" class="three_col_product"">
+									{% else %}
+									<img class="default-img tab-image" src="{% static 'images/placeholder.png' %}" alt="No Image Available" style="width: 400px; height: 355px;">
+									{% endif %}
 									<a href="/orders/addtoshopcart/{{ rs.id }}" class="buy"><i class="fa fa-shopping-bag"></i></a>
 								</div>
 							</div>

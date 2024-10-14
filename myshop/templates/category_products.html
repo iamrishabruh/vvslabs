@@ -73,7 +73,11 @@
                         {% for rs in recently_view_product%}
                         <div class="single-post first">
                             <div class="image">
+                                {% if rs.image %}
                                 <img src="{{rs.image.url}}" alt="#">
+                                {% else %}
+                                <img class="default-img tab-image" src="{% static 'images/placeholder.png' %}" alt="No Image Available" style="width: 400px; height: 355px;">
+                                {% endif %}
                             </div>
                             <div class="content">
                                 <h5><a href="/product/{{ rs.id }}/{{ rs.slug }}">{{rs.title}}</a></h5>
@@ -143,6 +147,7 @@
                         <div class="single-product">
                             <div class="product-img">
                                 <a href="/product/{{ rs.id }}/{{ rs.slug }}">
+                                    {% if rs.image %}
                                     <img class="default-img" src="{{rs.image.url}}" alt="#" style="height: 350px;
                                     width: 245px;">
                                     <img class="hover-img" src="{{rs.image.url}}" alt="#" style="height: 350px;

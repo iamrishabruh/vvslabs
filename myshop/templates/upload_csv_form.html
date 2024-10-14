@@ -1,8 +1,30 @@
-<!-- templates/admin/upload_csv_form.html -->
-{% extends "admin/base_site.html" %}
+<!-- templates/upload_csv_form.html -->
+{% extends "homebase.html" %}
+{% load static %}
 
 {% block content %}
   <h1>{{ title }}</h1>
+  <p>Please upload a CSV file with the following headers:</p>
+  <ul>
+    <li>title</li>
+    <li>category</li>
+    <li>status</li>
+    <li>slug</li>
+    <li>sku</li>
+    <li>stock</li>
+    <li>price</li>
+    <li>metal_type</li>
+    <li>style</li>
+    <li>carats_total_weight</li>
+    <li>primary_gem_type</li>
+    <li>primary_gem_shape</li>
+    <li>primary_gem_color_clarity</li>
+    <li>length_mm</li>
+    <li>width_mm</li>
+    <li>gram_weight</li>
+  </ul>
+  <p>You can download a sample CSV file <a href="{% static 'admin/sample_products.csv' %}">here</a>.</p>
+
   <form method="post" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
     <div class="form-row">

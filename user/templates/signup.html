@@ -63,8 +63,12 @@
                     <div class="single-product">
                         <div class="product-img">
                             <a href="/product/{{ rs.id }}/{{ rs.slug }}">
+                                {% if rs.image %}
                                 <img class="default-img slider_images" src="{{rs.image.url}}" alt="#">
                                 <img class="hover-img slider_images" src="{{rs.image.url}}" alt="#">
+                                {% else %}
+                                <img class="default-img tab-image" src="{% static 'images/placeholder.png' %}" alt="No Image Available" style="width: 400px; height: 355px;">
+                                {% endif %}
                                 <span class="out-of-stock">Hot</span>
                             </a>
                             <div class="button-head">

@@ -3,11 +3,13 @@ import mptt
 from mptt.admin import DraggableMPTTAdmin
 from mptt.models import MPTTModel
 from mptt.fields import TreeForeignKey
+from django.utils.text import slugify
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.forms import ModelForm
+
 from django.db.models import Avg, Count
 # Create your models here.
 class Category(MPTTModel):
@@ -25,8 +27,7 @@ class Category(MPTTModel):
     slug = models.SlugField(null=False, unique=True)
     create_at=models.DateTimeField(auto_now_add=True)
     update_at=models.DateTimeField(auto_now=True)
-    def __str__(self):
-        return self.title
+   
 
     def get_absolute_url(self):
         return reverse('category_detail', kwargs={'slug': self.slug})    
@@ -46,69 +47,68 @@ class Category(MPTTModel):
         if self.image is not None:
             return mark_safe('<div class="single-slider overlay" style="background-image: {}">'.format(self.image))
         else:
-            return ""    
+            return "No image"    
 
-from django.db import models
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+            # Ensure slug uniqueness
+            original_slug = self.slug
+            counter = 1
+            while Category.objects.filter(slug=self.slug).exists():
+                self.slug = f"{original_slug}-{counter}"
+                counter += 1
+        super().save(*args, **kwargs)
+class Product(models.Model):
+
+    from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField  # Ensure django-ckeditor is installed and configured
 
 class Product(models.Model):
     # Status Choices
     STATUS = (
-        ('True', 'True'),
-        ('False', 'False'),
+        ('Available', 'Available'),
+        ('Unavailable', 'Unavailable'),
     )
-
+    status = models.CharField(max_length=12, choices=STATUS)
     # Gender Choices (if still applicable)
     GENDER = (
         ('None', 'None'),
         ('Men', 'Men'),
         ('Women', 'Women'),
     )
-
+    gender = models.CharField(max_length=100, choices=GENDER, default='None')
     # Variant Choices
     VARIANTS = (
         ('None', 'None'),
         ('Color', 'Color'),
         ('Color-Size', 'Color-Size'), 
     )
-
+    variant = models.CharField(max_length=20, choices=VARIANTS, default='None')
+   
     # Category Relationship
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
-
-    # Basic Product Information
     title = models.CharField(max_length=150)
     keywords = models.CharField(max_length=255)
     description = models.TextField(max_length=255)
     long_description = RichTextUploadingField(default='Write Your long Description here')
-
-    # Image and Media
-    image = models.ImageField(upload_to='images/', null=False)
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
     additional_images = models.ImageField(upload_to='images/additional/', blank=True, null=True)  # Optional: For multiple images
-
-    # Pricing and Inventory
     price = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     quantity = models.IntegerField(default=0)
-
-    # Gender (if still applicable)
-    gender = models.CharField(max_length=100, choices=GENDER, default='None')
-
-    # Slug for SEO-friendly URLs
+  
     slug = models.SlugField(null=False, unique=True)
-
-    # Status and Variants
-    status = models.CharField(max_length=10, choices=STATUS)
-    variant = models.CharField(max_length=20, choices=VARIANTS, default='None')
-
-    # Visit Tracking
+   
+    
     num_of_visits = models.IntegerField(default=0)
     last_visit = models.DateTimeField(blank=True, null=True)
 
     # Diamond Specific Fields
 
     METAL_TYPE_CHOICES = (
-        ('10kt White Gold', '10kt White Gold'),
-        ('14kt Yellow Gold', '14kt Yellow Gold'),
-        ('18kt Rose Gold', '18kt Rose Gold'),
+        ('White Gold', 'White Gold'),
+        ('Yellow Gold', 'Yellow Gold'),
+        ('Rose Gold', 'Rose Gold'),
         ('Platinum', 'Platinum'),
         # Add more as needed
     )
@@ -126,7 +126,7 @@ class Product(models.Model):
     style = models.CharField(max_length=50, choices=STYLE_CHOICES, default='Crosses')
 
     CARATS_TOTAL_WEIGHT_CHOICES = (
-        ('1/2 Ct.t.w.', '1/2 Ct.t.w.'),
+        ('0.5 Ct.t.w.', '0.5 Ct.t.w.'),
         ('1 Ct.t.w.', '1 Ct.t.w.'),
         ('1.25 Ct.t.w.', '1.25 Ct.t.w.'),
         ('1.5 Ct.t.w.', '1.5 Ct.t.w.'),
@@ -197,18 +197,18 @@ class Product(models.Model):
         verbose_name="Gram Weight",
         help_text="Weight of the jewelry piece in grams (approximately)"
     )
-
-    def __str__(self):
-        return self.title
+    
+    sku = models.CharField(max_length=100, unique=True, blank=True, null=True)  # SKU field
+    stock = models.PositiveIntegerField(default=0)  # Stock field
+   
 
     def get_absolute_url(self):
         return reverse('category_detail', kwargs={'slug': self.slug})
 ## method to create a fake table field in read only mode
     def image_tag(self):
-        if self.image.url is not None:
-            return mark_safe('<img src="{}" height="50"/>'.format(self.image.url))
-        else:
-            return "" 
+        if self.image and self.image.url:
+            return mark_safe(f'<img src="{self.image.url}" width="50" height="50" />')
+        return "No Image"
 
     def avaregereview(self):
         reviews = Comment.objects.filter(product=self, status='True').aggregate(avarage=Avg('rate'))
@@ -229,8 +229,6 @@ class Images(models.Model):
     title = models.CharField(max_length=50,blank=True)
     image = models.ImageField(blank=True, upload_to='images/')
 
-    def __str__(self):
-        return self.title
 
 class Comment(models.Model):
     STATUS = (
@@ -249,8 +247,7 @@ class Comment(models.Model):
     status=models.CharField(max_length=10,choices=STATUS, default='New')
     create_at=models.DateTimeField(auto_now_add=True)
     update_at=models.DateTimeField(auto_now=True)
-    def __str__(self):
-        return self.subject
+   
 
 class CommentForm(ModelForm):
     class Meta:

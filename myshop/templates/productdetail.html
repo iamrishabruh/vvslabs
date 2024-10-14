@@ -43,7 +43,11 @@
 
                         {% for rs in images %}
                         <div class="product-view active">
+                            {% if rs.image}
                             <img src="{{ rs.image.url }}" alt="" style="height: 400px">
+                            {% else %}
+                            <img class="default-img tab-image" src="{% static 'images/placeholder.png' %}" alt="No Image Available" style="width: 400px; height: 355px;">
+							{% endif %}
                         </div>
                         {% endfor %}
 
@@ -55,7 +59,11 @@
                         </div>
                         {% for rs in images %}
                         <div class="product-view">
+                            {% if rs.image %}
                             <img src="{{ rs.image.url }}" alt="aa">
+                            {% else %}
+                            <img class="default-img tab-image" src="{% static 'images/placeholder.png' %}" alt="No Image Available" style="width: 400px; height: 355px;">
+							{% endif %}
                         </div>
                         {% endfor %}
 
@@ -143,7 +151,11 @@
                                                         style="color: #D9D9D9; text-shadow: 1px 1px #000000; width: 90px">
                                                         {{ rs.price }}  {{ rs.color }}
                                                     </a>
+                                                    {% if rs.image %}
                                                     <img src="{{ rs.image }}" style="height: 70px">
+                                                    {% else %}
+                                                    <img class="default-img tab-image" src="{% static 'images/placeholder.png' %}" alt="No Image Available" style="width: 400px; height: 355px;">
+									                {% endif %}
                                                 </li>
                                                 {% endfor %}
                                             </ul>
@@ -191,7 +203,11 @@
                                                     style=" color: #D9D9D9; text-shadow: 1px 1px #000000; width: 90px">
                                                     {{ rs.price }}  {{ rs.color }}
                                                 </a>
+                                                {% if rs.image %}
                                                 <img src="{{ rs.image }}" style="height: 70px">
+                                                {% else %}
+                                                <img class="default-img tab-image" src="{% static 'images/placeholder.png' %}" alt="No Image Available" style="width: 400px; height: 355px;">
+									            {% endif %}
                                             </li>
                                             {% endfor %}
                                         </ul>
